@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K6 Weather Test</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use the Inter font family -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4f46e5', // Indigo 600
+                        'primary-dark': '#4338ca', // Indigo 700
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Optional: Add a smooth transition for background/text color changes */
+        .transition-colors {
+            transition: background-color 0.3s, color 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    
+    <!-- Navigation Bar -->
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+            <div class="flex items-center">
+                <!-- Simple Logo/Brand -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm-1 16H8a1 1 0 0 1 0-2h3a1 1 0 0 1 0 2zm3-3H8a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2zm1-3H8a1 1 0 0 1 0-2h7a1 1 0 0 1 0 2z"/>
+                </svg>
+                <h1 class="text-xl font-bold text-gray-900 ml-2">Data Insight Hub</h1>
+            </div>
+            <nav class="flex space-x-4">
+                <a href="/" class="text-sm font-medium text-gray-900 hover:text-primary transition-colors border-b-2 border-primary pb-1">Dashboard</a>
+                <a href="/contact.html" class="text-sm font-medium text-gray-500 hover:text-primary transition-colors pb-1">Support</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-2">Real-Time Environmental Data</h2>
+            <p class="text-lg text-gray-600 mb-8">Utilize our API gateway to retrieve current weather metrics for any global location.</p>
+
+            <div class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border border-gray-100">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-4">Location Query Interface</h3>
+
+                <!-- Search Form -->
+                <form id="weatherForm" class="flex flex-col sm:flex-row gap-4 mb-8">
+                    <input type="text" id="cityInput" placeholder="Enter city name (e.g., London, Tokyo, NYC)" required 
+                            class="flex-grow p-3 md:p-4 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary focus:outline-none shadow-sm transition-all duration-150 text-gray-700">
+                    <button type="submit" 
+                             class="bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-colors duration-200 flex items-center justify-center">
+                        <!-- Search Icon (Inline SVG) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Execute Query
+                    </button>
+                </form>
+
+                <!-- Weather Display Card -->
+                <div id="weatherResult" class="min-h-[150px] flex items-center justify-center bg-gray-50 rounded-lg p-6 border border-gray-200">
+                    <p class="text-gray-500 italic">Input a location above to fetch data. Results will be displayed here.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 border-t border-gray-200 py-6 bg-white">
+        <div class="container mx-auto text-center text-sm text-gray-500">
+            &copy; 2024 Data Insight Hub. All rights reserved. | Enterprise Data Solution
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const weatherForm = document.getElementById('weatherForm');
+        const cityInput = document.getElementById('cityInput');
+        const weatherResult = document.getElementById('weatherResult');
+
+        // Helper function to display messages (error/success/loading) in the result pane
+        function displayMessage(text, type = 'info') {
+            let bgColor = 'bg-gray-50';
+            let textColor = 'text-gray-500';
+
+            switch (type) {
+                case 'loading':
+                    textColor = 'text-primary';
+                    bgColor = 'bg-indigo-50 animate-pulse';
+                    break;
+                case 'error':
+                    textColor = 'text-red-700';
+                    bgColor = 'bg-red-100';
+                    break;
+                case 'success':
+                    textColor = 'text-green-700';
+                    bgColor = 'bg-green-100';
+                    break;
+            }
+
+            weatherResult.className = `min-h-[150px] flex items-center justify-center rounded-lg p-6 border ${bgColor.replace('bg-', 'border-')} ${bgColor}`;
+            weatherResult.innerHTML = `<p class="font-medium ${textColor}">${text}</p>`;
+        }
+
+        // Check for success message from contact page redirect
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('submission') === 'success') {
+            displayMessage('Success! Your support request was submitted successfully. We will be in touch shortly.', 'success');
+            history.replaceState(null, '', location.pathname); // Clear the URL parameter
+        }
+
+        weatherForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const city = cityInput.value.trim();
+            if (!city) return;
+
+            displayMessage('Querying API Gateway for location data...', 'loading');
+
+            try {
+                // Fetch data from the Express server proxy endpoint
+                const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to retrieve environmental data.');
+                }
+
+                const iconUrl = data.icon ? `https://openweathermap.org/img/wn/${data.icon}@4x.png` : 'https://placehold.co/150x150/e0f2f1/00796b?text=N%2FA';
+                const tempColor = data.temp > 25 ? 'text-red-500' : data.temp < 10 ? 'text-blue-500' : 'text-gray-900';
+                
+                // Redesigned result display for enterprise look
+                weatherResult.className = 'min-h-[150px] bg-white rounded-xl p-8 border border-gray-200 shadow-xl transition duration-300 transform hover:shadow-2xl';
+                weatherResult.innerHTML = `
+                    <div class="flex flex-col sm:flex-row items-center justify-between">
+                        <!-- Location & Primary Data -->
+                        <div class="flex items-center space-x-6">
+                            <img src="${iconUrl}" alt="${data.description}" 
+                                 class="w-28 h-28 object-contain flex-shrink-0 -mt-2" 
+                                 onerror="this.src='https://placehold.co/112x112/e0f2f1/00796b?text=Icon%20Err';">
+
+                            <div>
+                                <h3 class="text-5xl font-extrabold ${tempColor} tracking-tight mb-1">${Math.round(data.temp)}°C</h3>
+                                <p class="text-xl font-medium text-gray-800">${data.city}</p>
+                                <p class="text-sm text-gray-500 capitalize">${data.description}</p>
+                            </div>
+                        </div>
+
+                        <!-- Secondary Metrics (Vertical Stack) -->
+                        <div class="mt-6 sm:mt-0 pt-6 sm:pt-0 sm:border-l border-gray-200 sm:pl-8 space-y-3 w-full sm:w-auto">
+                            <div class="flex justify-between sm:justify-start sm:flex-col">
+                                <span class="text-sm font-medium text-gray-500">Humidity:</span>
+                                <span class="text-base font-semibold text-gray-700">${data.humidity}%</span>
+                            </div>
+                            <div class="flex justify-between sm:justify-start sm:flex-col">
+                                <span class="text-sm font-medium text-gray-500">Wind Speed:</span>
+                                <span class="text-base font-semibold text-gray-700">${data.windSpeed} m/s</span>
+                            </div>
+                            <div class="flex justify-between sm:justify-start sm:flex-col">
+                                <span class="text-sm font-medium text-gray-500">Pressure:</span>
+                                <span class="text-base font-semibold text-gray-700">${data.pressure} hPa</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error("Client Error:", error);
+                displayMessage(`Error: Could not process request. ${error.message}`, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

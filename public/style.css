@@ -1,0 +1,86 @@
+/*
+ * Tailwind CSS utility classes are assumed to be loaded for deployment platforms
+ * like Netlify or Vercel, but for local testing without a build step, 
+ * we will use a small amount of custom CSS with a font import.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+/* Base Styles (Mimicking Tailwind Reset) */
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Utility Classes (Manual approximations of essential Tailwind for readability) */
+.bg-gray-50 { background-color: #f9fafb; }
+.bg-white { background-color: #ffffff; }
+.bg-blue-600 { background-color: #2563eb; }
+.bg-blue-700:hover { background-color: #1d4ed8; }
+.bg-green-500 { background-color: #10b981; }
+.bg-green-600:hover { background-color: #059669; }
+
+.text-white { color: #ffffff; }
+.text-gray-800 { color: #1f2937; }
+.text-gray-700 { color: #374151; }
+.text-gray-600 { color: #4b5563; }
+.text-blue-700 { color: #1d4ed8; }
+.text-green-600 { color: #059669; }
+
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-4xl { font-size: 2.25rem; }
+.text-5xl { font-size: 3rem; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.font-semibold { font-weight: 600; }
+.font-light { font-weight: 300; }
+
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-lg { border-radius: 0.5rem; }
+
+/* Flexbox and Layout (Approximate) */
+.min-h-screen { min-height: 100vh; }
+.flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-xl { max-width: 36rem; }
+.max-w-lg { max-width: 32rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.gap-4 { gap: 1rem; }
+
+/* Custom Styles */
+.border-b { border-bottom: 1px solid #e5e7eb; }
+.pb-2 { padding-bottom: 0.5rem; }
+.w-full { width: 100%; }
+
+/* Form Field Focus Animation */
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6; /* focus:border-blue-500 */
+    box-shadow: 0 0 0 1px #3b82f6; /* focus:ring-blue-500 */
+}
+
+/* Simple Loading Animation */
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+/* Responsive Padding */
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.md\:p-8 { padding: 2rem; }
