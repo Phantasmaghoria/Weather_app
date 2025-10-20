@@ -1,0 +1,9 @@
+[build]
+  publish = "public"            # Folder that contains your index.html
+  functions = "netlify/functions"  # Folder where your getWeather.js function is
+  command = "echo 'No build step needed'"  # Skips build since it's a static site
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200

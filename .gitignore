@@ -53,3 +53,5 @@ Thumbs.db
 *.pid
 *.seed
 *.sock
+# Local Netlify folder
+.netlify
