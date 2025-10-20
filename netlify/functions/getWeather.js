@@ -1,8 +1,7 @@
 import axios from "axios";
 
 export async function handler(event, context) {
-  const params = new URLSearchParams(event.queryStringParameters);
-  const city = params.get("city") || "London";
+  const city = event.queryStringParameters.city || "London";
   const OPENWEATHER_API_KEY = "9bbb8f31a9a1858055b6e1c2b2ba284e";
 
   try {
@@ -19,14 +18,13 @@ export async function handler(event, context) {
         icon: weather.weather[0].icon,
         humidity: weather.main.humidity,
         windSpeed: weather.wind.speed,
-        pressure: weather.main.pressure
-      })
+        pressure: weather.main.pressure,
+      }),
     };
   } catch (error) {
-    console.error("Weather API Error:", error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Could not fetch weather data." })
+      body: JSON.stringify({ error: "Could not fetch weather data." }),
     };
   }
 }
