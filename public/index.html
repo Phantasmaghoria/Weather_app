@@ -133,7 +133,7 @@
 
             try {
                 // Fetch data from the Express server proxy endpoint
-                const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+                const response = await fetch(`/api/getWeather?city=${encodeURIComponent(city)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
