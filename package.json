@@ -1,10 +1,11 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Weather App",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "echo 'No build step needed, preparing public folder for deployment'"
   },
   "keywords": [],
   "author": "",
