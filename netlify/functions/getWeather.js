@@ -1,8 +1,8 @@
-import axios from "axios";
+const axios = require("axios");
 
-export async function handler(event, context) {
+exports.handler = async function (event, context) {
   const city = event.queryStringParameters?.city || "London";
-  const OPENWEATHER_API_KEY = "9bbb8f31a9a1858055b6e1c2b2ba284e"; // use your actual key
+  const OPENWEATHER_API_KEY = "9bbb8f31a9a1858055b6e1c2b2ba284e"; // replace with your actual key
 
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${OPENWEATHER_API_KEY}`;
 
@@ -25,7 +25,7 @@ export async function handler(event, context) {
         icon: weather.weather[0].icon,
         humidity: weather.main.humidity,
         windSpeed: weather.wind.speed,
-        pressure: weather.main.pressure
+        pressure: weather.main.pressure,
       }),
     };
   } catch (error) {
@@ -39,4 +39,4 @@ export async function handler(event, context) {
       }),
     };
   }
-}
+};
